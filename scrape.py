@@ -3,33 +3,58 @@ import numpy as np
 import requests,openpyxl
 from bs4 import BeautifulSoup
 
-PhoneName=[]
+Products=[]
 Price=[]
 Features=[]
+ProductLink=[]
+Reviews=[]
 newdataframe=pd.DataFrame()
+flipkartAddress="https://www.flipkart.com/search?q="
+flipkartBaseAddress="https://www.flipkart.com"
+searchWord=input("Enter the search queries:")
+result=flipkartAddress+searchWord.replace(" ","+")
+#print(result)
+if __name__ == '__main__':
+        try:
+            page_num=int(input("Enter the number of pages:"))
+            for j in range(1,int(page_num)+1):
+                source = requests.get(result+"&"+str(j))
+                source.raise_for_status()
+                soup = BeautifulSoup(source.content, 'html.parser')
+                products = soup.findAll('div', class_='_4rR01T')
+                features = soup.findAll('ul', class_="_1xgFaf")
+                price = soup.findAll('div', class_='_30jeq3 _1_WHN1')
+                link = soup.find_all('a', class_="_1fQZEK")
+                ratings=soup.findAll('div',class_="_3LWZlK")
+                #print("page "+str(j))
+                for i in link:
+                    productLinks = flipkartBaseAddress + i['href']
+                    ProductLink.append(productLinks)
+                for i in products:
+                    Product = i.text
+                    Products.append(Product)
+                for i in ratings:
+                    rates=i.text
+                    Reviews.append(rates)
+                for i in price:
+                    price = i.text
+                    Price.append(price)
+                for i in features:
+                    featu = i.text
+                    Features.append(featu)
+                #print(Rating)
+            newdataframe['Product'] = Products
+            newdataframe['Features'] = Features
+            #print(len(Reviews))
+            newdataframe['Price'] = Price
+            newdataframe['Product Link'] = ProductLink
+            newdataframe.to_excel("Product.xlsx", index=False)
+            excelData = pd.read_excel('Product.xlsx')
+            print(excelData)
+        except Exception as e:
+            print(e)
 
-try:
-    source = requests.get("https://www.flipkart.com/search?q=mobile+phone+5g&sid=tyy%2C4io&as=on&as-show=on&otracker=AS_QueryStore_OrganicAutoSuggest_1_13_na_na_na&otracker1=AS_QueryStore_OrganicAutoSuggest_1_13_na_na_na&as-pos=1&as-type=RECENT&suggestionId=mobile+phone+5g%7CMobiles&requestId=61c49f0b-72f7-46bd-bc25-43d98824df52&as-searchtext=moblie%20phones")
-    source.raise_for_status() #it throws the error if the link is not
 
-    soup=BeautifulSoup(source.text,'html.parser')
-    phones=soup.findAll('div',class_='_4rR01T')
-    features=soup.findAll('li',class_='rgWa7D')
-    price=soup.findAll('div',class_='_30jeq3 _1_WHN1')
-    for i in phones:
-        phone=i.text
-        PhoneName.append(phone)
-    for i in price:
-        price = i.text
-        Price.append(price)
-    for i in features:
-        featu = i.text
-        Features.append(featu)
-    newdataframe['Phone']=PhoneName
-    newdataframe['Price'] = Price
-    newdataframe.to_excel("exceldata.xlsx",index=False)
-    excelData=pd.read_excel('exceldata.xlsx')
-    print(excelData)
 
-except Exception as e:
-    print(e)
+
+
