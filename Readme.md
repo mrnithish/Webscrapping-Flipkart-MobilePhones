@@ -1,6 +1,4 @@
-Certainly, here's a README for a web scraping project that extracts product details from Flipkart using Python with libraries like pandas, requests, BeautifulSoup, and openpyxl:
 
-```markdown
 # Web Scraping Flipkart
 
 This Python project is designed to scrape product details from Flipkart. It provides product information, including the product name, price, description, reviews, and product link. It can be used for pricing comparison between recent deals on the website and older deals.
