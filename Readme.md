@@ -37,7 +37,7 @@ pip install pandas requests beautifulsoup4 openpyxl
 1. Clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/yourusername/flipkart-scraper.git
+git clone https://github.com/mrnithish/Webscrapping-Flipkart-anyqueries.git
 ```
 
 2. Navigate to the project directory:
